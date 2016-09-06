@@ -13,3 +13,64 @@
 
 var inquirer = require("inquirer");
 var mysql = require("mysql");
+
+var connection = mysql.createConnection({
+    host: "localhost",
+    port: 3306,
+    user: "root", //Your username
+    password: "s0nyd0g", //Your password
+    database: "bamazon"
+});
+
+connection.connect(function(err) {
+    if (err) throw err;
+});
+
+connection.query('SELECT * FROM products', function(err, res) {
+    if (err) throw err;
+    console.log("Item # | Product        | Department| Price | Quantity ");
+
+    //Loop through all the rows and print out their column values
+    for (var i=0; i<res.length; i++){
+    	if (i<9){
+    		console.log(" " + res[i].Item_ID + "|" + res[i].Product_Name + " -- " + res[i].Department_Name + "--" + res[i].Price + "--" + res[i].Stock_Quantity);
+    	}
+    	else if (i >= 9){
+    		console.log(res[i].Item_ID + "|" + res[i].Product_Name + " -- " + res[i].Department_Name + "--" + res[i].Price + "--" + res[i].Stock_Quantity);
+    	}
+    }
+
+    promptUser();
+});
+
+var promptUser = function(){
+	inquirer.prompt([{
+		name: "productID",
+		message: "Enter the ID of the item you wish to purchase.",
+		validate: function(value){
+            if (isNaN(value) == false) {
+                return true;
+            }
+            else {
+            	return false;
+            }
+		}
+	},{
+        name: "productQuantity",
+        message: "How many would you like to buy?",
+        validate: function(value){
+            if (isNaN(value) == false) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }        
+    }]).then(function(answers){
+		var currentItem = answers.productID;
+		var currentAmount = answers.productQuantity;
+
+        console.log(currentItem + " " + currentAmount);
+
+	})
+}
