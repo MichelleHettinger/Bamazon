@@ -83,14 +83,14 @@ var promptUser = function(){
                     console.log("You can buy it!");
 
                     var newQuantity = (res[0].Stock_Quantity - currentAmount);
-                    console.log(newQuantity);
+                    var totalCost = res[0].Price*currentAmount;
 
                     connection.query('UPDATE products SET ? WHERE ?',[{
                         Stock_Quantity: newQuantity
                     },{
                         Item_ID: currentItem
                     }], function(err, res){
-                        console.log(res);
+                        console.log("You were charged $" + totalCost);
                     });
                 }
             })
