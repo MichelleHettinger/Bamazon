@@ -45,7 +45,7 @@ connection.query('SELECT * FROM products', function(err, res) {
 
 var promptUser = function(){
 	inquirer.prompt([{
-		name: "productID",
+		name: "Item_ID",
 		message: "Enter the ID of the item you wish to purchase.",
 		validate: function(value){
             if (isNaN(value) == false) {
@@ -56,7 +56,7 @@ var promptUser = function(){
             }
 		}
 	},{
-        name: "productQuantity",
+        name: "userQuantity",
         message: "How many would you like to buy?",
         validate: function(value){
             if (isNaN(value) == false) {
@@ -67,10 +67,32 @@ var promptUser = function(){
             }
         }        
     }]).then(function(answers){
-		var currentItem = answers.productID;
-		var currentAmount = answers.productQuantity;
+    		var currentItem = answers.Item_ID;
+    		var currentAmount = answers.userQuantity;
 
-        console.log(currentItem + " " + currentAmount);
+            //Read from database. If they requested too much, don't perform the transaction.
+            //Otherwise fulfuill the request.
+            connection.query('SELECT * FROM products WHERE ?',{
+                Item_ID: answers.Item_ID
+            },function(err, res){
+                if (currentAmount > res[0].Stock_Quantity){
+                    console.log("You cannot buy that many!");
+                    promptUser();
+                }
+                else { 
+                    console.log("You can buy it!");
 
-	})
-}
+                    var newQuantity = (res[0].Stock_Quantity - currentAmount);
+                    console.log(newQuantity);
+
+                    connection.query('UPDATE products SET ? WHERE ?',[{
+                        Stock_Quantity: newQuantity
+                    },{
+                        Item_ID: currentItem
+                    }], function(err, res){
+                        console.log(res);
+                    });
+                }
+            })
+	   })
+}   
