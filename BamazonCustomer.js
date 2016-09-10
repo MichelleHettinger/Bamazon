@@ -91,6 +91,7 @@ var promptUser = function(){
                         Item_ID: currentItem
                     }], function(err, res){
                         console.log("You were charged $" + totalCost);
+                        connection.end();
                     });
                 }
             })
