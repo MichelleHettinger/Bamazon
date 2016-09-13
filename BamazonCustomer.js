@@ -28,15 +28,15 @@ connection.connect(function(err) {
 
 connection.query('SELECT * FROM products', function(err, res) {
     if (err) throw err;
-    console.log("Item # | Product        | Department| Price | Quantity ");
+    console.log("Item # | Product -- Department -- Price -- Quantity ");
 
     //Loop through all the rows and print out their column values
     for (var i=0; i<res.length; i++){
     	if (i<9){
-    		console.log(" " + res[i].Item_ID + "|" + res[i].Product_Name + " -- " + res[i].Department_Name + "--" + res[i].Price + "--" + res[i].Stock_Quantity);
+    		console.log(" " + res[i].Item_ID + "     | " + res[i].Product_Name + " -- " + res[i].Department_Name + "--" + res[i].Price + "--" + res[i].Stock_Quantity);
     	}
     	else if (i >= 9){
-    		console.log(res[i].Item_ID + "|" + res[i].Product_Name + " -- " + res[i].Department_Name + "--" + res[i].Price + "--" + res[i].Stock_Quantity);
+    		console.log(res[i].Item_ID + "     | " + res[i].Product_Name + " -- " + res[i].Department_Name + "--" + res[i].Price + "--" + res[i].Stock_Quantity);
     	}
     }
 
